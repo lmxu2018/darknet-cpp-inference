@@ -16,6 +16,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
+using namespace cv;
+
 //#include <config.h>
 //#include <frame.h>
 
@@ -33,8 +35,10 @@ namespace stereo_bm {
         //void Detect(std::shared_ptr<Frame> m_frame, std::shared_ptr<Config> m_config);
 
     private:
-
-
+        void rgbgr_image_(image im);
+        image ipl_to_image_(IplImage* src);
+        image mat_to_image_(Mat m);
+        char* string_to_cstr(const std::string str);
 
     private:
         //std::unique_ptr<tensorflow::Session> session;

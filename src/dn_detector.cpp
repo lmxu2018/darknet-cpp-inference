@@ -1,11 +1,12 @@
 #include "dn_detector.h"
 #include <memory>
+#include<string.h>
 
 using namespace std;
 //using namespace stereo_bm;
 using namespace cv;
 
-void rgbgr_image_(image im)
+void stereo_bm::DNDetector::rgbgr_image_(image im)
 {
   int i;
   for(i = 0; i < im.w*im.h; ++i){
@@ -15,7 +16,7 @@ void rgbgr_image_(image im)
   }
 }
 
-image ipl_to_image_(IplImage* src)
+image stereo_bm::DNDetector::ipl_to_image_(IplImage* src)
 {
   int h = src->height;
   int w = src->width;
@@ -35,7 +36,7 @@ image ipl_to_image_(IplImage* src)
   return im;
 }
 
-image mat_to_image_(Mat m)
+image stereo_bm::DNDetector::mat_to_image_(Mat m)
 {
   IplImage ipl = m;
   image im = ipl_to_image_(&ipl);
@@ -44,17 +45,17 @@ image mat_to_image_(Mat m)
 }
 
 
-char* string_to_cstr(const std::string str){
+char* stereo_bm::DNDetector::string_to_cstr(const std::string str){
   //std::string str = "string";
   char *cstr = new char[str.length() + 1];
   strcpy(cstr, str.c_str());
-  // do stuff
+  return cstr;
   //delete [] cstr;
 }
 
 stereo_bm::DNDetector::DNDetector(const std::string& cfgfile, const std::string& weightfile, const std::string& name_list){
   names_ = get_labels(string_to_cstr(name_list));
-  net = load_network(string_to_cstr(cfgfile), string_to_cstr(weightfile), 0);
+  net = load_network(string_to_cstr(cfgfile),  string_to_cstr(weightfile), 0);
   set_batch_network(net, 1);
   srand(2222222);
 }
@@ -84,25 +85,4 @@ void stereo_bm::DNDetector::Detect(const cv::Mat &img){
 
   free_image(im);
   free_image(sized);
-}
-
-
-
-int main(int argc, char **argv)
-{
-
-  std::cout << argv[0] << "cfgfile weightfile imagefile" << std::endl;
-  //float thresh = find_float_arg(argc, argv, "-thresh", .5);
-  //char *filename = (argc > 4) ? argv[4]: 0;
-  //char *outfile = find_char_arg(argc, argv, "-out", 0);
-  //int fullscreen = find_arg(argc, argv, "-fullscreen");
-  //test_detector("cfg/coco.data", argv[2], argv[3], filename, thresh, .5, outfile, fullscreen);
-
-  std::shared_ptr<stereo_bm::DNDetector> detector;
-  detector = std::make_shared<stereo_bm::DNDetector>(argv[1], argv[2], "data/coco.names");
-  //stereo_bm::DNDetector detector(argv[1], argv[2], "data/coco.names");
-
-  cv::Mat image = cv::imread(argv[3]);
-  detector->Detect(image);
-
 }
