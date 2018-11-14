@@ -1,0 +1,8 @@
+build/
+.idea/
+darknet
+cmake-build-debug
+libdarknet.*
+*.o
+*.weights
+predictions.jpg
